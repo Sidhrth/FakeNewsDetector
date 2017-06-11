@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/disp2"
+        android:background="@drawable/disp4"
         />
 
     <EditText
