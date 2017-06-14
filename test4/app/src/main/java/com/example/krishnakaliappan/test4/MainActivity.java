@@ -1,10 +1,14 @@
 package com.example.krishnakaliappan.test4;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import java.io.IOException;
+import java.net.URL;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -29,10 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
         EditText text = (EditText) findViewById(R.id.editText);
         String link = text.getText().toString();
-        Intent i = new Intent(this,webview.class);
+        Intent i = new Intent(this,resultpage.class);
         i.putExtra("EXTRA_MESSAGAE",link);
         startActivity(i);
 
 
     }
+
+
 }
