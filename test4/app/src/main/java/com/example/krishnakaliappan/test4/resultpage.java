@@ -25,7 +25,7 @@ public class resultpage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resultpage);
+        setContentView(R.layout.resultscreen);
 
         Intent intent = getIntent();
         final String str = intent.getStringExtra("EXTRA_MESSAGE");
