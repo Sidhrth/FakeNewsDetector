@@ -24,8 +24,7 @@
 
         android:paddingTop="10dp"
         android:hint="Enter keyword or URL"
-        android:textColorHint="#000000
-"
+        android:textColorHint="#000000"
         android:textSize="30sp"
         android:maxHeight="60dp"
         app:layout_constraintLeft_toLeftOf="parent"

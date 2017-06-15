@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,10 @@ import java.util.Scanner;
 
 public class resultpage extends AppCompatActivity {
 
+     public ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+     public TextView Result = (TextView) findViewById(R.id.results);
+     public TextView Errormessage = (TextView) findViewById(R.id.error_message_display);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,96 +29,66 @@ public class resultpage extends AppCompatActivity {
 
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGE");
+        URL CustomSearchUrl = NetworkUtil.buildUrl(str);
 
-        ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-
-        try {
+        new CustomQueryTask().execute(CustomSearchUrl);
 
 
-            // looking for
-            String strNoSpaces = str.replace(" ", "+");
+    }
 
-            // Your API key
-            String key="AIzaSyCAajBXGsQKg4FDMBF2Lc1ffl1UtYP5Fzg";
 
-            // Your Search Engine ID
-            String cx = "013670998315178887075:tstnn39qzcq";
+    private void showJsonDataView() {
+        // First, make sure the error is invisible
+        Errormessage.setVisibility(View.INVISIBLE);
+        // Then, make sure the JSON data is visible
+        Result.setVisibility(View.VISIBLE);
+    }
 
-            String url2 = "https://www.googleapis.com/customsearch/v1?q=" + strNoSpaces + "&key=" + key + "&cx=" + cx + "&alt=json";
+    private void showErrorMessage() {
+        // First, hide the currently visible data
+        Result.setVisibility(View.INVISIBLE);
+        // Then, show the error
+        Errormessage.setVisibility(View.VISIBLE);
+    }
 
-            URL url = null;
 
+    public class CustomQueryTask extends AsyncTask<URL, Void, String> {
+
+        // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(URL... params) {
+            URL searchUrl = params[0];
+            String CustomSearchResults = null;
             try {
-                url = new URL(url2);
-            } catch (MalformedURLException e) {
+                CustomSearchResults = NetworkUtil.getResponseFromHttpUrl(searchUrl);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            String result2 = getResponseFromHttpUrl(url);
-
-            result.setText(result2);
-
-        }
-        catch(Exception e) {
-            System.out.println("Error1 " + e.getMessage());
+            return CustomSearchResults;
         }
 
+        @Override
+        protected void onPostExecute(String CustomSearchResults) {
+            // COMPLETED (27) As soon as the loading is complete, hide the loading indicator
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (CustomSearchResults != null && !CustomSearchResults.equals("")) {
+                // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
+                showJsonDataView();
+                Result.setText(CustomSearchResults);
+            } else {
+                // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
+                showErrorMessage();
+            }
+        }
     }
+}
 
 
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                InputStream in = urlConnection.getInputStream();
-
-                Scanner scanner = new Scanner(in);
-                scanner.useDelimiter("\\A");
-
-                boolean hasInput = scanner.hasNext();
-                if (hasInput) {
-                    return scanner.next();
-                } else {
-                    return null;
-                }
-            } finally {
-                urlConnection.disconnect();
-            }
-    }
-
-        class CustomSearchTask extends AsyncTask<URL, Void, String> {
-
-            // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected String doInBackground(URL... params) {
-                URL searchUrl = params[0];
-                String githubSearchResults = null;
-                try {
-                    githubSearchResults = getResponseFromHttpUrl(searchUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return githubSearchResults;
-            }
-
-            @Override
-            protected void onPostExecute(String githubSearchResults) {
-                // COMPLETED (27) As soon as the loading is complete, hide the loading indicator
-                mLoadingIndicator.setVisibility(View.INVISIBLE);
-                if (githubSearchResults != null && !githubSearchResults.equals("")) {
-                    // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
-                    showJsonDataView();
-                    mSearchResultsTextView.setText(githubSearchResults);
-                } else {
-                    // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
-                    showErrorMessage();
-                }
-            }
-        }
 
 
