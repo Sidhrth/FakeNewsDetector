@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +25,7 @@ public class resultpage extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGE");
 
-        
+        ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         try {
 
