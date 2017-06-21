@@ -25,18 +25,23 @@ public class resultpage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.resultscreen);
+        setContentView(R.layout.activity_resultpage);
 
         Intent intent = getIntent();
-        final String str = intent.getStringExtra("EXTRA_MESSAGE");
+        final String str = intent.getStringExtra("EXTRA_MESSAGAE");
 //        URL CustomSearchUrl = NetworkUtil.buildUrl(str);
-//
+        Log.d("search", "Searching for :" + str);
 //        new CustomQueryTask().execute(CustomSearchUrl);
 //         ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-         final TextView Result = (TextView) findViewById(R.id.results);
+        final TextView Result = (TextView) findViewById(R.id.results);
 //         TextView Errormessage = (TextView) findViewById(R.id.error_message_display);
 
-        Thread thread = new Thread(new Runnable()
+
+
+
+//
+//
+ Thread thread = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -55,7 +60,7 @@ public class resultpage extends AppCompatActivity {
                     String cx = "013670998315178887075:tstnn39qzcq";
 
                     String url2 = "https://www.googleapis.com/customsearch/v1?q=" + strNoSpaces + "&key=" + key + "&cx=" + cx + "&alt=json";
-                    Log.d("search", "Url = "+  url2);
+
                     String result2 = httpGet(url2);
 
                     Result.setText(result2);

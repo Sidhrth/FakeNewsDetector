@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\KPK\\Documents\\GitHub\\FakenewsV1\\custom\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_launcher.png",
+        "source": "C:\\Users\\KPK\\Documents\\GitHub\\FakenewsV1\\custom\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
         "merged": "C:\\Users\\KPK\\Documents\\custom\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_launcher.png",
         "source": "C:\\Users\\KPK\\Documents\\custom\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
     }
