@@ -6,8 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,8 +38,10 @@ public class resultpage extends AppCompatActivity {
         Log.d("search", "Searching for :" + str);
 //        new CustomQueryTask().execute(CustomSearchUrl);
 //         ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        final TextView Result = (TextView) findViewById(R.id.results);
+         ListView Result = (ListView) findViewById(R.id.results);
 //         TextView Errormessage = (TextView) findViewById(R.id.error_message_display);
+
+        ArrayAdapter adapter
 
 
 
@@ -63,7 +70,7 @@ public class resultpage extends AppCompatActivity {
 
                     String result2 = httpGet(url2);
 
-                    Result.setText(result2);
+                    JSONArray jarray = new JSONArray(result2);
 
                 }
                 catch(Exception e) {
@@ -103,6 +110,7 @@ public class resultpage extends AppCompatActivity {
         });
 
         thread.start();
+
 
     }
 

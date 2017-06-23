@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -31,6 +33,7 @@ public class resultpage extends AppCompatActivity {
         Log.d("show URL", "final url :" + CustomSearchUrl.toString());
 
         new CustomQueryTask().execute(CustomSearchUrl);
+
 
     }
 
