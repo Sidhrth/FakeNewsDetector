@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,20 +35,11 @@ public class resultpage extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String str = intent.getStringExtra("EXTRA_MESSAGAE");
-//        URL CustomSearchUrl = NetworkUtil.buildUrl(str);
         Log.d("search", "Searching for :" + str);
-//        new CustomQueryTask().execute(CustomSearchUrl);
-//         ProgressBar mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
          ListView Result = (ListView) findViewById(R.id.results);
-//         TextView Errormessage = (TextView) findViewById(R.id.error_message_display);
-
-        ArrayAdapter adapter
 
 
 
-
-//
-//
  Thread thread = new Thread(new Runnable()
         {
             @Override
@@ -69,8 +61,13 @@ public class resultpage extends AppCompatActivity {
                     String url2 = "https://www.googleapis.com/customsearch/v1?q=" + strNoSpaces + "&key=" + key + "&cx=" + cx + "&alt=json";
 
                     String result2 = httpGet(url2);
+//                    Log.d("json string",result2);
+                    JSONObject obj = new JSONObject(result2);
+                    JSONObject query = obj.getJSONObject("queries");
+                    int nresults = query.getInt("count");
+                    Log.d("number of results", String.valueOf(nresults));
+                  //  JSONArray items = obj.getJSONArray("items");
 
-                    JSONArray jarray = new JSONArray(result2);
 
                 }
                 catch(Exception e) {
@@ -98,7 +95,7 @@ public class resultpage extends AppCompatActivity {
 
                 while((line = rd.readLine()) != null) {
 
-                    Log.d("search", "Line =" + rd.readLine());
+                 Log.d("search", "Line =" + rd.readLine());
                     sb.append(line+"\n");
 
                 }
@@ -114,57 +111,6 @@ public class resultpage extends AppCompatActivity {
 
     }
 
-
-//    private void showJsonDataView() {
-//        // First, make sure the error is invisible
-//        Errormessage.setVisibility(View.INVISIBLE);
-//        // Then, make sure the JSON data is visible
-//        Result.setVisibility(View.VISIBLE);
-//    }
-//
-//    private void showErrorMessage() {
-//        // First, hide the currently visible data
-//        Result.setVisibility(View.INVISIBLE);
-//        // Then, show the error
-//        Errormessage.setVisibility(View.VISIBLE);
-//    }
-//
-//
-//    public class CustomQueryTask extends AsyncTask<URL, Void, String> {
-//
-//        // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            mLoadingIndicator.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected String doInBackground(URL... params) {
-//            URL searchUrl = params[0];
-//            String CustomSearchResults = null;
-//            try {
-//                CustomSearchResults = NetworkUtil.httpGet(searchUrl);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return CustomSearchResults;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String CustomSearchResults) {
-//            // COMPLETED (27) As soon as the loading is complete, hide the loading indicator
-//            mLoadingIndicator.setVisibility(View.INVISIBLE);
-//            if (CustomSearchResults != null && !CustomSearchResults.equals("")) {
-//                // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
-//                showJsonDataView();
-//               Result.setText(CustomSearchResults);
-//            } else {
-//                // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
-//                showErrorMessage();
-//            }
-//        }
-//    }
 }
 
 
