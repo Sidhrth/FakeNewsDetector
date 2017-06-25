@@ -10,14 +10,20 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 
 
 public class resultpage extends AppCompatActivity {
 
-    TextView Result = (TextView) findViewById(R.id.results);
+    String Json_String;
+
+    String opJson_String;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,52 +31,60 @@ public class resultpage extends AppCompatActivity {
         setContentView(R.layout.activity_resultpage);
 
         Intent intent = getIntent();
-        final String str = intent.getStringExtra("EXTRA_MESSAGAE");
+        String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
 
         URL CustomSearchUrl = NetworkUtil.buildUrl(str);
         Log.d("search", "Searching for :" + str);
         Log.d("show URL", "final url :" + CustomSearchUrl.toString());
 
-        new CustomQueryTask().execute(CustomSearchUrl);
+        new CustomQueryTask().execute();
 
 
     }
 
-    public class CustomQueryTask extends AsyncTask<URL, Void, String> {
+       class CustomQueryTask extends AsyncTask<Void,Void,String>{
 
-        // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            mLoadingIndicator.setVisibility(View.VISIBLE);
-//        }
+           @Override
+           protected String doInBackground(Void... params) {
 
-        @Override
-        protected String doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String CustomSearchResults = null;
-            try {
-                CustomSearchResults = NetworkUtil.httpGet(searchUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return CustomSearchResults;
-        }
+               try {
+                   Intent intent = getIntent();
+                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
-//        @Override
-//        protected void onPostExecute(String CustomSearchResults) {
-//            // COMPLETED (27) As soon as the loading is complete, hide the loading indicator
-//            mLoadingIndicator.setVisibility(View.INVISIBLE);
-//            if (CustomSearchResults != null && !CustomSearchResults.equals("")) {
-//                // COMPLETED (17) Call showJsonDataView if we have valid, non-null results
-//                showJsonDataView();
-//                Result.setText(CustomSearchResults);
-//            } else {
-//                // COMPLETED (16) Call showErrorMessage if the result is null in onPostExecute
-//                showErrorMessage();
-//            }
-//        }
-    }
+                   URL CustomSearchUrl = NetworkUtil.buildUrl(str);
+                   HttpURLConnection httpURLConnection = (HttpURLConnection) CustomSearchUrl.openConnection();
+                   InputStream inputStream = httpURLConnection.getInputStream();
+                   BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                   StringBuilder stringBuilder = new StringBuilder();
+                   while ((Json_String = bufferedReader.readLine())!= null){
 
+                       stringBuilder.append(Json_String+"\n");
+
+
+                   }
+
+                   bufferedReader.close();
+                   inputStream.close();
+                   httpURLConnection.disconnect();
+
+                   return stringBuilder.toString().trim();
+
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+
+
+                return null;
+           }
+
+           @Override
+           protected void onPostExecute(String res) {
+
+               opJson_String = res;
+
+           }
+       }
 }
+
+

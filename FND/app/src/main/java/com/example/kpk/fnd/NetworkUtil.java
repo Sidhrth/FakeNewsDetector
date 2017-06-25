@@ -40,52 +40,5 @@ class NetworkUtil {
         return url;
     }
 
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
-
-    public static String httpGet(URL url) throws IOException {
-
-
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        if(conn.getResponseCode() != 200) {
-            throw new IOException(conn.getResponseMessage());
-        }
-
-        Log.d("search", "Connection status = " + conn.getResponseMessage());
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        while((line = rd.readLine()) != null) {
-
-            Log.d("search", "Line =" + rd.readLine());
-            sb.append(line+"\n");
-
-        }
-        rd.close();
-
-        conn.disconnect();
-        return sb.toString();
-    }
-
 
 }
