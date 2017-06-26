@@ -39,7 +39,7 @@ public class resultpage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resultpage);
+       setContentView(R.layout.activity_resultpage);
 
         resultAdapter = new ResultAdapter(this,R.layout.row_layout);
         listView = (ListView) findViewById(R.id.DispResults);
@@ -54,27 +54,7 @@ public class resultpage extends AppCompatActivity {
 
         new CustomQueryTask().execute();
 
-        try {
-            jsonObject = new JSONObject(opJson_String);
-            jsonArray = new JSONObject(opJson_String).getJSONArray("items");
-            int count = 0;
-            String title,link;
-            while (count<jsonArray.length())
-            {
-                JSONObject JO = jsonArray.getJSONObject(count);
-                title = JO.getString("title");
-                link = JO.getString("link");
 
-//                resultinfo info = new resultinfo(title,link);
-//                resultAdapter.add(info);
-
-                count++;
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -117,6 +97,28 @@ public class resultpage extends AppCompatActivity {
            protected void onPostExecute(String res) {
 
                opJson_String = res;
+
+               try {
+                   jsonObject = new JSONObject(opJson_String);
+                   jsonArray = new JSONObject(opJson_String).getJSONArray("items");
+                   int count = 0;
+                   String title,link;
+                   while (count<jsonArray.length())
+                   {
+                       JSONObject JO = jsonArray.getJSONObject(count);
+                       title = JO.getString("title");
+                       link = JO.getString("link");
+
+                       resultinfo info = new resultinfo(title,link);
+                       resultAdapter.add(info);
+
+                       count++;
+
+                   }
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
 
            }
        }
