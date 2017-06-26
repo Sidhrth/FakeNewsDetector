@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,11 +28,22 @@ public class resultpage extends AppCompatActivity {
 
     String opJson_String;
 
+    JSONObject jsonObject;
+
+    JSONArray jsonArray;
+
+    ResultAdapter resultAdapter;
+
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
 
+        resultAdapter = new ResultAdapter(this,R.layout.row_layout);
+        listView = (ListView) findViewById(R.id.DispResults);
+        listView.setAdapter(resultAdapter);
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
@@ -40,6 +54,27 @@ public class resultpage extends AppCompatActivity {
 
         new CustomQueryTask().execute();
 
+        try {
+            jsonObject = new JSONObject(opJson_String);
+            jsonArray = new JSONObject(opJson_String).getJSONArray("items");
+            int count = 0;
+            String title,link;
+            while (count<jsonArray.length())
+            {
+                JSONObject JO = jsonArray.getJSONObject(count);
+                title = JO.getString("title");
+                link = JO.getString("link");
+
+//                resultinfo info = new resultinfo(title,link);
+//                resultAdapter.add(info);
+
+                count++;
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -85,6 +120,8 @@ public class resultpage extends AppCompatActivity {
 
            }
        }
+
+
 }
 
 
