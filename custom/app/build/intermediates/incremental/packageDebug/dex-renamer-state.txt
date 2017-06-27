@@ -1,7 +1,0 @@
-#Thu Jun 15 14:41:12 IST 2017
-base.0=C\:\\Users\\KPK\\Documents\\custom\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_b887bce0bc37bf5bef53119f68594c75189ad9b6
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=C\:\\Users\\KPK\\Documents\\custom\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_d955aab9de7f87fb84b847eeaed2b9bed2ba342b\\classes.dex
-base.1=C\:\\Users\\KPK\\Documents\\custom\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_d955aab9de7f87fb84b847eeaed2b9bed2ba342b
-file.0=C\:\\Users\\KPK\\Documents\\custom\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_b887bce0bc37bf5bef53119f68594c75189ad9b6\\classes.dex

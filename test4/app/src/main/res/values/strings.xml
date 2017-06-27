@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">TrueorNot</string>
-    <string name="error_message">
-        Failed to get results. Please try again.
-    </string>
-</resources>
