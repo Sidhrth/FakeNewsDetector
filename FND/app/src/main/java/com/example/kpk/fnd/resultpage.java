@@ -58,7 +58,18 @@ public class resultpage extends AppCompatActivity {
 
     }
 
-       class CustomQueryTask extends AsyncTask<Void,Void,String>{
+    public void webdisp(View view) {
+
+        TextView lnk = (TextView) findViewById(R.id.link);
+        String url = lnk.getText().toString();
+        Log.d("url for webview",url);
+        Intent webintent = new Intent(this,webresult.class);
+        webintent.putExtra("linkurl",url);
+        startActivity(webintent);
+
+    }
+
+    class CustomQueryTask extends AsyncTask<Void,Void,String>{
 
            @Override
            protected String doInBackground(Void... params) {
@@ -121,7 +132,10 @@ public class resultpage extends AppCompatActivity {
                }
 
            }
-       }
+    }
+
+
+
 
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="150dp"
+    android:layout_width="match_parent" android:layout_height="100dp"
     android:padding="10dp">
 
     <TextView
@@ -15,25 +15,10 @@
         android:layout_below="@+id/title"
         android:layout_margin="7dp"
         android:id="@+id/link"
-        android:autoLink="web"
+        android:onClick="webdisp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="http://www.snopes.com/london-underground-sign/"/>
-
-   <RatingBar
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:scaleX="0.5"
-       android:scaleY="0.5"
-       android:layout_alignParentBottom="true"
-       android:layout_centerHorizontal="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/title"
-        android:layout_alignEnd="@+id/title" />
 
 
 </RelativeLayout>
