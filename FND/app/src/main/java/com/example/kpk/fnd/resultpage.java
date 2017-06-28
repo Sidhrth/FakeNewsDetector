@@ -109,6 +109,8 @@ public class resultpage extends AppCompatActivity {
 
                opJson_String = res;
 
+
+
                try {
                    jsonObject = new JSONObject(opJson_String);
                    jsonArray = new JSONObject(opJson_String).getJSONArray("items");
