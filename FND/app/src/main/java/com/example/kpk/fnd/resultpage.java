@@ -35,6 +35,7 @@ public class resultpage extends AppCompatActivity {
     ResultAdapter resultAdapter;
 
     ListView listView;
+    int flag ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class resultpage extends AppCompatActivity {
         Log.d("search", "Searching for :" + str);
         Log.d("show URL", "final url :" + CustomSearchUrl.toString());
 
-        new CustomQueryTask().execute();
+        new CustomQueryTask().execute(CustomSearchUrl);
 
 
 
@@ -69,17 +70,15 @@ public class resultpage extends AppCompatActivity {
 
     }
 
-    class CustomQueryTask extends AsyncTask<Void,Void,String>{
+    class CustomQueryTask extends AsyncTask<URL,Void,String>{
 
            @Override
-           protected String doInBackground(Void... params) {
+           protected String doInBackground(URL... urls) {
 
                try {
-                   Intent intent = getIntent();
-                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
-                   URL CustomSearchUrl = NetworkUtil.buildUrl(str);
-                   HttpURLConnection httpURLConnection = (HttpURLConnection) CustomSearchUrl.openConnection();
+
+                   HttpURLConnection httpURLConnection = (HttpURLConnection) urls[0].openConnection();
                    InputStream inputStream = httpURLConnection.getInputStream();
                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                    StringBuilder stringBuilder = new StringBuilder();
@@ -108,33 +107,63 @@ public class resultpage extends AppCompatActivity {
            protected void onPostExecute(String res) {
 
                opJson_String = res;
+               flag = ProcessJson(opJson_String);
+
+               if (flag == 1) {
+
+                   Intent intent = getIntent();
+                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
+                   URL CustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
+
+                   new CustomQueryTask().execute(CustomSearchUrl);
 
 
 
-               try {
-                   jsonObject = new JSONObject(opJson_String);
-                   jsonArray = new JSONObject(opJson_String).getJSONArray("items");
-                   int count = 0;
-                   String title,link;
-                   while (count<jsonArray.length())
-                   {
-                       JSONObject JO = jsonArray.getJSONObject(count);
-                       title = JO.getString("title");
-                       link = JO.getString("link");
-
-                       resultinfo info = new resultinfo(title,link);
-                       resultAdapter.add(info);
-
-                       count++;
-
-                   }
-
-               } catch (JSONException e) {
-                   e.printStackTrace();
                }
+
+
+
+
+
+
+
+
+
 
            }
     }
+
+    public int ProcessJson(String jsonstring) {
+
+        try {
+            jsonObject = new JSONObject(opJson_String);
+            jsonArray = new JSONObject(opJson_String).getJSONArray("items");
+            int count = 0;
+            String title,link;
+            while (count<jsonArray.length())
+            {
+                JSONObject JO = jsonArray.getJSONObject(count);
+                title = JO.getString("title");
+                link = JO.getString("link");
+
+                resultinfo info = new resultinfo(title,link);
+                resultAdapter.add(info);
+
+                count++;
+
+                flag = 0;
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            flag = 1;
+        }
+
+        return flag;
+    }
+
+
 
 
 

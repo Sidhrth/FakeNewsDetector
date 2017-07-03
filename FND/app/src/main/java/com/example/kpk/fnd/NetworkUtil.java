@@ -40,5 +40,28 @@ class NetworkUtil {
         return url;
     }
 
+    public static URL buildUrlopensearch(String CustomSearchQuery) {
+        // looking for
+        String strNoSpaces = CustomSearchQuery.replace(" ", "+");
+
+        // Your API key
+        String key = "AIzaSyCAajBXGsQKg4FDMBF2Lc1ffl1UtYP5Fzg";
+
+        // Your Search Engine ID
+        String cx = "013670998315178887075:ef9hqcm8--q";
+
+        String url2 = "https://www.googleapis.com/customsearch/v1?q=" + strNoSpaces + "&key=" + key + "&cx=" + cx + "&alt=json";
+
+        URL url = null;
+
+        try {
+            url = new URL(url2);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
 
 }
