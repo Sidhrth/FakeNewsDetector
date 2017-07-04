@@ -8,6 +8,7 @@
 
 
     <ListView
+        android:background="#FFFFFF"
         android:id="@+id/DispResults"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">

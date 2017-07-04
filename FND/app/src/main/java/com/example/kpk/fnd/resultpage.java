@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.util.List;
 
 
 public class resultpage extends AppCompatActivity {
@@ -36,6 +37,7 @@ public class resultpage extends AppCompatActivity {
 
     ListView listView;
     int flag ;
+    String[] strlets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +50,53 @@ public class resultpage extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
+        if(str.length()> 30){
+//            flag = 3;
+            int sentences = str.length() - str.replace(".", "").length();
+            strlets = new String[sentences];
+            for (int count =0;count<strlets.length;count++){
 
-        URL CustomSearchUrl = NetworkUtil.buildUrl(str);
-        Log.d("search", "Searching for :" + str);
-        Log.d("show URL", "final url :" + CustomSearchUrl.toString());
+                for (int i=0;i<str.length();i++){
+                    char c = str.charAt(i);
+                    if(c != '.'){
+                        strlets[count] = strlets[count] + c;
+                    }
+                    else {
+                        ++i;
+                        break;
+                    }
 
-        new CustomQueryTask().execute(CustomSearchUrl);
+                }
+            }
+
+            Log.d("strlets",strlets[2]);
+        }
+
+
+
+
+
+
+        if (flag ==3){
+
+            for(int i=0; i<strlets.length;i++) {
+
+                URL url = NetworkUtil.buildUrl(strlets[i]);
+                new CustomQueryTask().execute(url);
+
+            }
+
+            //TODO fill in the details
+
+        }
+        else {
+            URL CustomSearchUrl = NetworkUtil.buildUrl(str);
+            Log.d("search", "Searching for :" + str);
+            Log.d("show URL", "final url :" + CustomSearchUrl.toString());
+
+
+            new CustomQueryTask().execute(CustomSearchUrl);
+        }
 
 
 
@@ -107,6 +150,11 @@ public class resultpage extends AppCompatActivity {
            protected void onPostExecute(String res) {
 
                opJson_String = res;
+
+               if (flag == 3){
+                   ProcessLargeJson(opJson_String);
+
+               }
                flag = ProcessJson(opJson_String);
 
                if (flag == 1) {
@@ -121,16 +169,49 @@ public class resultpage extends AppCompatActivity {
 
                }
 
+               if(flag == 2) {
+
+                   showToast();
 
 
-
-
-
+               }
 
 
 
 
            }
+    }
+
+    private void ProcessLargeJson(String opJson_string) {
+        try {
+            jsonObject = new JSONObject(opJson_String);
+            jsonArray = new JSONObject(opJson_String).getJSONArray("items");
+            int count = 0;
+            String title,link;
+            while (count<jsonArray.length())
+            {
+                JSONObject JO = jsonArray.getJSONObject(count);
+                title = JO.getString("title");
+                link = JO.getString("link");
+
+
+                count++;
+
+                flag = 0;
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    private void showToast() {
+
+        Toast.makeText(this,"Results not found",Toast.LENGTH_LONG).show();
     }
 
     public int ProcessJson(String jsonstring) {
@@ -157,7 +238,12 @@ public class resultpage extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            flag = 1;
+            if (flag ==1){
+                flag = 2;
+            }
+            else {
+                flag = 1;
+            }
         }
 
         return flag;
