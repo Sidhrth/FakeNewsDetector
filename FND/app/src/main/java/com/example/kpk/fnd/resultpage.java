@@ -2,6 +2,7 @@ package com.example.kpk.fnd;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +24,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 
 public class resultpage extends AppCompatActivity {
@@ -34,15 +41,16 @@ public class resultpage extends AppCompatActivity {
     JSONArray jsonArray;
 
     ResultAdapter resultAdapter;
-
+    String Title;
     ListView listView;
-    int flag ;
+    int flag = 0;
     String[] strlets;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_resultpage);
+        setContentView(R.layout.activity_resultpage);
 
         resultAdapter = new ResultAdapter(this,R.layout.row_layout);
         listView = (ListView) findViewById(R.id.DispResults);
@@ -50,26 +58,41 @@ public class resultpage extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
-//        if(str.length()> 30){
+        String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+
+        Pattern p = Pattern.compile(URL_REGEX);
+        Matcher m = p.matcher(str);//replace with string to compare
+        if(m.find()) {
+            Log.d("URL test","It is a URL");
+
+            flag = 4;
+            new LinkTest().execute(str);
+
+        }
+        else {
+            Log.d("URL test","It is NOT a URL");
+        }
+
+//        if(str.length()> 40){
 ////            flag = 3;
-//            int sentences = str.length() - str.replace(".", "").length();
+//            int sentences = str.length() - str.replace(".","").length();
+//            Log.d("number of Sentences",String.valueOf(sentences));
 //            strlets = new String[sentences];
-//            for (int count =0;count<strlets.length;count++){
+//            for (int count =0;count<sentences;count++){
 //
-//                for (int i=0;i<str.length();i++){
+//                for (;i<str.length()-1;i++){
 //                    char c = str.charAt(i);
 //                    if(c != '.'){
 //                        strlets[count] = strlets[count] + c;
 //                    }
 //                    else {
-//                        ++i;
 //                        break;
 //                    }
 //
 //                }
 //            }
 //
-//            Log.d("strlets",strlets[2]);
+////            Log.d("strlets",strlets[1]);
 //        }
 
 
@@ -90,12 +113,17 @@ public class resultpage extends AppCompatActivity {
 //
 //        }
 //        else {
-            URL CustomSearchUrl = NetworkUtil.buildUrl(str);
-            Log.d("search", "Searching for :" + str);
-            Log.d("show URL", "final url :" + CustomSearchUrl.toString());
+            if (flag == 0) {
+
+                URL CustomSearchUrl = NetworkUtil.buildUrl(str);
+                Log.d("search", "Searching for :" + str);
+                Log.d("show URL", "final url :" + CustomSearchUrl.toString());
 
 
-            new CustomQueryTask().execute(CustomSearchUrl);
+                new CustomQueryTask().execute(CustomSearchUrl);
+
+
+            }
 //        }
 
 
@@ -111,6 +139,30 @@ public class resultpage extends AppCompatActivity {
         webintent.putExtra("linkurl",url);
         startActivity(webintent);
 
+    }
+
+    class LinkTest extends AsyncTask<String,Void,Void>{
+        @Override
+        protected Void doInBackground(String... params) {
+
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(params[0]).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Title = doc.title();
+            Log.d("Title of URL",Title);
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            URL CustomSearchUrl = NetworkUtil.buildUrl(Title);
+            new CustomQueryTask().execute(CustomSearchUrl);
+            
+        }
     }
 
     class CustomQueryTask extends AsyncTask<URL,Void,String>{
