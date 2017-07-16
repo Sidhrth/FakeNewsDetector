@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,13 +40,14 @@ public class resultpage extends AppCompatActivity {
     JSONObject jsonObject;
 
     JSONArray jsonArray;
-
+    String[] LTitle;
+    String[] Llink;
     ResultAdapter resultAdapter;
     String Title;
     ListView listView;
     int flag = 0;
     String[] strlets;
-    int i = 0;
+    int n;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class resultpage extends AppCompatActivity {
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
         Pattern p = Pattern.compile(URL_REGEX);
-        Matcher m = p.matcher(str);//replace with string to compare
+        Matcher m = p.matcher(str);
         if(m.find()) {
             Log.d("URL test","It is a URL");
 
@@ -73,46 +75,31 @@ public class resultpage extends AppCompatActivity {
             Log.d("URL test","It is NOT a URL");
         }
 
-//        if(str.length()> 40){
-////            flag = 3;
-//            int sentences = str.length() - str.replace(".","").length();
-//            Log.d("number of Sentences",String.valueOf(sentences));
-//            strlets = new String[sentences];
-//            for (int count =0;count<sentences;count++){
-//
-//                for (;i<str.length()-1;i++){
-//                    char c = str.charAt(i);
-//                    if(c != '.'){
-//                        strlets[count] = strlets[count] + c;
-//                    }
-//                    else {
-//                        break;
-//                    }
-//
-//                }
-//            }
-//
-////            Log.d("strlets",strlets[1]);
-//        }
+        if(str.length()> 40){
+           flag = 3;
+            strlets = str.split("\\.\\s*");
+
+            Log.d("strlets", strlets[0]);
+        }
 
 
 
 
-//
-//
-//        if (flag ==3){
-//
-//            for(int i=0; i<strlets.length;i++) {
-//
-//                URL url = NetworkUtil.buildUrl(strlets[i]);
-//                new CustomQueryTask().execute(url);
-//
-//            }
-//
-//            //TODO fill in the details
-//
-//        }
-//        else {
+
+
+        if (flag ==3) {
+
+            for (int i = 0; i < strlets.length; i++) {
+
+                URL url = NetworkUtil.buildUrl(strlets[i]);
+                new CustomQueryTask().execute(url);
+
+            }
+
+        }
+
+
+
             if (flag == 0) {
 
                 URL CustomSearchUrl = NetworkUtil.buildUrl(str);
@@ -124,7 +111,6 @@ public class resultpage extends AppCompatActivity {
 
 
             }
-//        }
 
 
 
@@ -161,7 +147,7 @@ public class resultpage extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             URL CustomSearchUrl = NetworkUtil.buildUrl(Title);
             new CustomQueryTask().execute(CustomSearchUrl);
-            
+
         }
     }
 
@@ -203,11 +189,15 @@ public class resultpage extends AppCompatActivity {
 
                opJson_String = res;
 
-//               if (flag == 3){
-//                   ProcessLargeJson(opJson_String);
-//
-//               }
-               flag = ProcessJson(opJson_String);
+               if (flag == 3){
+                   ProcessLargeJson(opJson_String);
+
+
+
+               }
+               if (flag == 0 || flag == 1 || flag == 4) {
+                   flag = ProcessJson(opJson_String);
+               }
 
                if (flag == 1) {
 
@@ -240,18 +230,23 @@ public class resultpage extends AppCompatActivity {
             jsonArray = new JSONObject(opJson_String).getJSONArray("items");
             int count = 0;
             String title,link;
+            LTitle = new String[jsonArray.length()];
+            Llink = new String[jsonArray.length()];
             while (count<jsonArray.length())
             {
                 JSONObject JO = jsonArray.getJSONObject(count);
                 title = JO.getString("title");
                 link = JO.getString("link");
 
+                LTitle[count + n] = title;
+                Llink[count + n] = link;
+
 
                 count++;
 
-                flag = 0;
 
             }
+            n = n + count;
 
         } catch (JSONException e) {
             e.printStackTrace();
