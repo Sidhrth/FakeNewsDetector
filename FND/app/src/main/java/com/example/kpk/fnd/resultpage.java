@@ -42,7 +42,7 @@ public class resultpage extends AppCompatActivity {
     JSONObject jsonObject;
 
     JSONArray jsonArray;
-    Map<String[],Integer> Ltit = new HashMap<>();
+    Map<String[],Integer> Lintitl = new HashMap<>();
     ResultAdapter resultAdapter;
     String Title;
     ListView listView;
@@ -192,6 +192,8 @@ public class resultpage extends AppCompatActivity {
                if (flag == 3){
                    ProcessLargeJson(opJson_String);
 
+                   if (Lintitl)
+
 
 
                }
@@ -235,6 +237,16 @@ public class resultpage extends AppCompatActivity {
                 JSONObject JO = jsonArray.getJSONObject(count);
                 title = JO.getString("title");
                 link = JO.getString("link");
+
+                String[] info = {title,link};
+
+                if (Lintitl.containsKey(info)){
+
+                Lintitl.put(info,Lintitl.get(info)+1);
+                }
+                else {
+                    Lintitl.put(info, 1);
+                }
 
 
 
