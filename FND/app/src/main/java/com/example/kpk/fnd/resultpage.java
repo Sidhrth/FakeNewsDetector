@@ -24,7 +24,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,14 +42,12 @@ public class resultpage extends AppCompatActivity {
     JSONObject jsonObject;
 
     JSONArray jsonArray;
-    String[] LTitle;
-    String[] Llink;
+    Map<String[],Integer> Ltit = new HashMap<>();
     ResultAdapter resultAdapter;
     String Title;
     ListView listView;
     int flag = 0;
     String[] strlets;
-    int n;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,23 +230,18 @@ public class resultpage extends AppCompatActivity {
             jsonArray = new JSONObject(opJson_String).getJSONArray("items");
             int count = 0;
             String title,link;
-            LTitle = new String[jsonArray.length()];
-            Llink = new String[jsonArray.length()];
             while (count<jsonArray.length())
             {
                 JSONObject JO = jsonArray.getJSONObject(count);
                 title = JO.getString("title");
                 link = JO.getString("link");
 
-                LTitle[count + n] = title;
-                Llink[count + n] = link;
 
 
                 count++;
 
 
             }
-            n = n + count;
 
         } catch (JSONException e) {
             e.printStackTrace();
