@@ -40,7 +40,7 @@ public class resultpage extends AppCompatActivity {
     String opJson_String;
 
     JSONObject jsonObject;
-
+    String temp;
     JSONArray jsonArray;
     Map<String[],Integer> Lintitl = new HashMap<>();
     ResultAdapter resultAdapter;
@@ -67,16 +67,15 @@ public class resultpage extends AppCompatActivity {
         Matcher m = p.matcher(str);
         if(m.find()) {
             Log.d("URL test","It is a URL");
-
-            flag = 4;
+            flag =4;
             new LinkTest().execute(str);
 
         }
-        else {
+        else{
             Log.d("URL test","It is NOT a URL");
         }
 
-        if(str.length()> 40){
+        if(str.length() > 40){
            flag = 3;
             strlets = str.split("\\.\\s*");
             Log.d("Using long expansion",">40");
@@ -93,6 +92,8 @@ public class resultpage extends AppCompatActivity {
             for (int i = 0; i < strlets.length; i++) {
 
                 URL url = NetworkUtil.buildUrl(strlets[i]);
+                temp = strlets[i];
+                Log.d("show URL", "final url :" + url.toString());
                 new CustomQueryTask().execute(url);
 
             }
@@ -146,6 +147,7 @@ public class resultpage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            flag = 0;
             URL CustomSearchUrl = NetworkUtil.buildUrl(Title);
             new CustomQueryTask().execute(CustomSearchUrl);
 
@@ -191,9 +193,18 @@ public class resultpage extends AppCompatActivity {
                opJson_String = res;
 
                if (flag == 3){
+
                    ProcessLargeJson(opJson_String);
 
+                   if (flag2 == 1){
+
+                       URL urL = NetworkUtil.buildUrlopensearch(temp);
+                       new CustomQueryTask().execute(urL);
+                   }
+
+
                    for (Map.Entry<String[],Integer> entry : Lintitl.entrySet()){
+
 
                        if (entry.getValue()>2){
                            String[] inf = entry.getKey();
@@ -206,7 +217,7 @@ public class resultpage extends AppCompatActivity {
 
 
                }
-               if (flag == 0 || flag == 1 || flag == 4) {
+               if (flag == 0 || (flag == 1)) {
                    flag = ProcessJson(opJson_String);
                }
 
@@ -261,11 +272,18 @@ public class resultpage extends AppCompatActivity {
 
                 count++;
 
-
+                flag2=0;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
+            if (flag2 == 1){
+                flag2 = 0;
+            }
+            else {
+                flag2 = 1;
+            }
+
         }
 
 
