@@ -47,6 +47,7 @@ public class resultpage extends AppCompatActivity {
     String Title;
     ListView listView;
     int flag = 0;
+    int flag2 = 0;
     String[] strlets;
 
     @Override
@@ -78,8 +79,8 @@ public class resultpage extends AppCompatActivity {
         if(str.length()> 40){
            flag = 3;
             strlets = str.split("\\.\\s*");
+            Log.d("Using long expansion",">40");
 
-            Log.d("strlets", strlets[0]);
         }
 
 
@@ -192,8 +193,16 @@ public class resultpage extends AppCompatActivity {
                if (flag == 3){
                    ProcessLargeJson(opJson_String);
 
-                   if (Lintitl)
+                   for (Map.Entry<String[],Integer> entry : Lintitl.entrySet()){
 
+                       if (entry.getValue()>2){
+                           String[] inf = entry.getKey();
+                           resultinfo info = new resultinfo(inf[0],inf[1]);
+                           resultAdapter.add(info);
+
+                       }
+
+                   }
 
 
                }
