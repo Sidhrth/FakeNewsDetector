@@ -75,12 +75,12 @@ public class resultpage extends AppCompatActivity {
             Log.d("URL test","It is NOT a URL");
         }
 
-        if(str.length() > 40){
-           flag = 3;
-            strlets = str.split("\\.\\s*");
-            Log.d("Using long expansion",">40");
-
-        }
+//        if(str.length() > 40){
+//           flag = 3;
+//            strlets = str.split("\\.\\s*");
+//            Log.d("Using long expansion",">40");
+//
+//        }
 
 
 
