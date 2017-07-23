@@ -40,14 +40,14 @@ public class resultpage extends AppCompatActivity {
     String opJson_String;
 
     JSONObject jsonObject;
-    String temp;
     JSONArray jsonArray;
     Map<String[],Integer> Lintitl = new HashMap<>();
     ResultAdapter resultAdapter;
     String Title;
     ListView listView;
-    int flag = 0;
-    int flag2 = 0;
+    boolean firsttry = true;
+    boolean isUrl;
+    boolean isLarge;
     String[] strlets;
 
     @Override
@@ -67,7 +67,7 @@ public class resultpage extends AppCompatActivity {
         Matcher m = p.matcher(str);
         if(m.find()) {
             Log.d("URL test","It is a URL");
-            flag =4;
+            isUrl = true;
             new LinkTest().execute(str);
 
         }
@@ -86,23 +86,23 @@ public class resultpage extends AppCompatActivity {
 
 
 
+//
+//        if (flag ==3) {
+//
+//            for (int i = 0; i < strlets.length; i++) {
+//
+//                URL url = NetworkUtil.buildUrl(strlets[i]);
+//                temp = strlets[i];
+//                Log.d("show URL", "final url :" + url.toString());
+//                new CustomQueryTask().execute(url);
+//
+//            }
+//
+//        }
 
-        if (flag ==3) {
-
-            for (int i = 0; i < strlets.length; i++) {
-
-                URL url = NetworkUtil.buildUrl(strlets[i]);
-                temp = strlets[i];
-                Log.d("show URL", "final url :" + url.toString());
-                new CustomQueryTask().execute(url);
-
-            }
-
-        }
 
 
-
-            if (flag == 0) {
+            if (!isLarge) {
 
                 URL CustomSearchUrl = NetworkUtil.buildUrl(str);
                 Log.d("search", "Searching for :" + str);
@@ -147,7 +147,6 @@ public class resultpage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            flag = 0;
             URL CustomSearchUrl = NetworkUtil.buildUrl(Title);
             new CustomQueryTask().execute(CustomSearchUrl);
 
@@ -190,38 +189,81 @@ public class resultpage extends AppCompatActivity {
            @Override
            protected void onPostExecute(String res) {
 
+               boolean foundresult;
                opJson_String = res;
 
-               if (flag == 3){
+               if (!isLarge){
+                   foundresult=ProcessJson(opJson_String);
 
+                   if (!foundresult && firsttry){
+                       opensearch();
+                   }
+
+                   if (!foundresult && !firsttry){
+                       showToast();
+                   }
+
+               }
+               else {
                    ProcessLargeJson(opJson_String);
-
-                   if (flag2 == 1){
-
-                       URL urL = NetworkUtil.buildUrlopensearch(temp);
-                       new CustomQueryTask().execute(urL);
-                   }
-
-
-                   for (Map.Entry<String[],Integer> entry : Lintitl.entrySet()){
-
-
-                       if (entry.getValue()>2){
-                           String[] inf = entry.getKey();
-                           resultinfo info = new resultinfo(inf[0],inf[1]);
-                           resultAdapter.add(info);
-
-                       }
-
-                   }
-
-
-               }
-               if (flag == 0 || (flag == 1)) {
-                   flag = ProcessJson(opJson_String);
                }
 
-               if (flag == 1) {
+
+//               if (flag == 3){
+//
+//                   ProcessLargeJson(opJson_String);
+//
+//                   if (flag2 == 1){
+//
+//                       URL urL = NetworkUtil.buildUrlopensearch(temp);
+//                       new CustomQueryTask().execute(urL);
+//                   }
+//
+//
+//                   for (Map.Entry<String[],Integer> entry : Lintitl.entrySet()){
+//
+//
+//                       if (entry.getValue()>2){
+//                           String[] inf = entry.getKey();
+//                           resultinfo info = new resultinfo(inf[0],inf[1]);
+//                           resultAdapter.add(info);
+//
+//                       }
+//
+//                   }
+//
+//
+//               }
+//               if (flag == 0 || (flag == 1)) {
+//                   flag = ProcessJson(opJson_String);
+//               }
+//
+//               if (flag == 1) {
+//
+//                   Intent intent = getIntent();
+//                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
+//                   URL CustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
+//
+//                   new CustomQueryTask().execute(CustomSearchUrl);
+//
+//
+//
+//               }
+//
+//               if(flag == 2) {
+//
+//                   showToast();
+//
+//
+//               }
+//
+//
+
+
+           }
+    }
+
+    private void opensearch (){
 
                    Intent intent = getIntent();
                    String str = intent.getStringExtra("EXTRA_MESSAGAE");
@@ -230,20 +272,6 @@ public class resultpage extends AppCompatActivity {
                    new CustomQueryTask().execute(CustomSearchUrl);
 
 
-
-               }
-
-               if(flag == 2) {
-
-                   showToast();
-
-
-               }
-
-
-
-
-           }
     }
 
     private void ProcessLargeJson(String opJson_string) {
@@ -272,17 +300,12 @@ public class resultpage extends AppCompatActivity {
 
                 count++;
 
-                flag2=0;
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            if (flag2 == 1){
-                flag2 = 0;
-            }
-            else {
-                flag2 = 1;
-            }
+
 
         }
 
@@ -295,7 +318,7 @@ public class resultpage extends AppCompatActivity {
         Toast.makeText(this,"Results not found",Toast.LENGTH_LONG).show();
     }
 
-    public int ProcessJson(String jsonstring) {
+    public boolean ProcessJson(String opJson_String) {
 
         try {
             jsonObject = new JSONObject(opJson_String);
@@ -313,21 +336,18 @@ public class resultpage extends AppCompatActivity {
 
                 count++;
 
-                flag = 0;
-
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            if (flag ==1){
-                flag = 2;
+            if (firsttry){
+                firsttry = false;
             }
-            else {
-                flag = 1;
-            }
+
+
         }
 
-        return flag;
+        return true;
     }
 
 

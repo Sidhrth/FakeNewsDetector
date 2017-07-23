@@ -22,7 +22,8 @@ class NetworkUtil {
         String strNoSpaces = CustomSearchQuery.replace(" ", "+");
 
         // Your API key
-        String key = "AIzaSyCAajBXGsQKg4FDMBF2Lc1ffl1UtYP5Fzg";
+//        String key = "AIzaSyCAajBXGsQKg4FDMBF2Lc1ffl1UtYP5Fzg";
+        String key = "AIzaSyDRWRoMz4Jw6Iqqj0cSt9dXBFmd3q_23hE";
 
         // Your Search Engine ID
         String cx = "013670998315178887075:tstnn39qzcq";
