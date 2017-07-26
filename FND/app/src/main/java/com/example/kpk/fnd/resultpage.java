@@ -37,7 +37,7 @@ public class resultpage extends AppCompatActivity {
 
     String Json_String;
 
-    String opJson_String;
+//    String opJson_String;
 
     JSONObject jsonObject;
     JSONArray jsonArray;
@@ -46,8 +46,9 @@ public class resultpage extends AppCompatActivity {
     String Title;
     ListView listView;
     boolean firsttry = true;
-    boolean isUrl;
-    boolean isLarge;
+    boolean secondtry = false;
+    boolean isUrl=false;
+    boolean isLarge = false;
     String[] strlets;
 
     @Override
@@ -67,6 +68,7 @@ public class resultpage extends AppCompatActivity {
         Matcher m = p.matcher(str);
         if(m.find()) {
             Log.d("URL test","It is a URL");
+            Log.d("Link Conditions","Entered");
             isUrl = true;
             new LinkTest().execute(str);
 
@@ -74,6 +76,9 @@ public class resultpage extends AppCompatActivity {
         else{
             Log.d("URL test","It is NOT a URL");
         }
+
+
+
 
 //        if(str.length() > 40){
 //           flag = 3;
@@ -102,14 +107,36 @@ public class resultpage extends AppCompatActivity {
 
 
 
-            if (!isLarge) {
+            if (!isLarge && !isUrl) {
 
+                final boolean[] status = new boolean[2];
+                Log.d("Regular Conditions","entered");
                 URL CustomSearchUrl = NetworkUtil.buildUrl(str);
                 Log.d("search", "Searching for :" + str);
                 Log.d("show URL", "final url :" + CustomSearchUrl.toString());
+                 new CustomQueryTask(new AsyncResponse() {
+                     @Override
+                     public void ProcessFinish(String op) {
+                          status[0] =ProcessJson(op);
+                         Log.d("status", String.valueOf(status[0]));
+                     }
+                 }).execute(CustomSearchUrl);
 
+                if(!status[0]){
+                    Log.d("results not found","open seacrch");
+                    URL openCustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
+                    Log.d("Improved Url",openCustomSearchUrl.toString());
+                   new CustomQueryTask(new AsyncResponse() {
+                       @Override
+                       public void ProcessFinish(String op) {
+                           status[1]= ProcessJson(op);
+                       }
+                   }).execute(openCustomSearchUrl);
+                }
 
-                new CustomQueryTask().execute(CustomSearchUrl);
+                if (!status[1]){
+                    showToast();
+                }
 
 
             }
@@ -147,13 +174,25 @@ public class resultpage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            Log.d("Linktest Task","Entered");
             URL CustomSearchUrl = NetworkUtil.buildUrl(Title);
-            new CustomQueryTask().execute(CustomSearchUrl);
+            new CustomQueryTask(new AsyncResponse() {
+                @Override
+                public void ProcessFinish(String op) {
+                    ProcessJson(op);
+                }
+            }).execute(CustomSearchUrl);
 
         }
     }
 
     class CustomQueryTask extends AsyncTask<URL,Void,String>{
+
+        public AsyncResponse obj = null;
+
+        public  CustomQueryTask(AsyncResponse asyncResponse){
+            obj = asyncResponse;
+        }
 
            @Override
            protected String doInBackground(URL... urls) {
@@ -190,23 +229,28 @@ public class resultpage extends AppCompatActivity {
            protected void onPostExecute(String res) {
 
                boolean foundresult;
-               opJson_String = res;
+//               opJson_String = res;
 
-               if (!isLarge){
-                   foundresult=ProcessJson(opJson_String);
+               obj.ProcessFinish(res);
 
-                   if (!foundresult && firsttry){
-                       opensearch();
-                   }
 
-                   if (!foundresult && !firsttry){
-                       showToast();
-                   }
+//               if (!isLarge){
+//                   foundresult = ProcessJson(opJson_String);
+//
+//                   if (!foundresult && !firsttry){
+//                       opensearch();
+//                   }
+//
+//                   if (!foundresult && secondtry){
+//                       showToast();
+//                   }
+//
+//               }
+//               else {
+//                   ProcessLargeJson(opJson_String);
+//               }
 
-               }
-               else {
-                   ProcessLargeJson(opJson_String);
-               }
+
 
 
 //               if (flag == 3){
@@ -263,21 +307,21 @@ public class resultpage extends AppCompatActivity {
            }
     }
 
-    private void opensearch (){
-
-                   Intent intent = getIntent();
-                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
-                   URL CustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
-
-                   new CustomQueryTask().execute(CustomSearchUrl);
-
-
-    }
+//    private void opensearch (){
+//
+//                   Intent intent = getIntent();
+//                   String str = intent.getStringExtra("EXTRA_MESSAGAE");
+//                   URL CustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
+//
+//                   new CustomQueryTask().execute(CustomSearchUrl);
+//
+//
+//    }
 
     private void ProcessLargeJson(String opJson_string) {
         try {
-            jsonObject = new JSONObject(opJson_String);
-            jsonArray = new JSONObject(opJson_String).getJSONArray("items");
+            jsonObject = new JSONObject(opJson_string);
+            jsonArray = new JSONObject(opJson_string).getJSONArray("items");
             int count = 0;
             String title,link;
             while (count<jsonArray.length())
@@ -320,6 +364,8 @@ public class resultpage extends AppCompatActivity {
 
     public boolean ProcessJson(String opJson_String) {
 
+        boolean resultfound = true;
+
         try {
             jsonObject = new JSONObject(opJson_String);
             jsonArray = new JSONObject(opJson_String).getJSONArray("items");
@@ -340,17 +386,24 @@ public class resultpage extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            if (firsttry){
-                firsttry = false;
-            }
-
-
+//            if (firsttry){
+//                firsttry = false;
+//                secondtry = false;
+//            }
+//            if (!firsttry){
+//                secondtry = true;
+//            }
+//
+//            resultfound = false;
+            resultfound = false;
         }
 
-        return true;
+        return resultfound;
     }
 
-
+    public interface AsyncResponse {
+        void ProcessFinish(String op);
+    }
 
 
 
