@@ -121,18 +121,56 @@ public class resultpage extends AppCompatActivity {
 
 
 
-        if(str.length() > 40){
+        if(str.length() > 40 && !isUrl){
+            final boolean[] status = new boolean[2];
            isLarge = true;
             strlets = str.split("\\.\\s*");
             Log.d("Using long expansion",">40");
 
             for (int i = 0; i < strlets.length; i++) {
-//
-//                URL url = NetworkUtil.buildUrl(strlets[i]);
-//                Log.d("show URL", "final url :" + url.toString());
-//                new CustomQueryTask().execute(url);
-//
+
+                URL url = NetworkUtil.buildUrl(strlets[i]);
+                Log.d("show URL", "final url :" + url.toString());
+                try {
+                    String opjson = new CustomQueryTask().execute(url).get();
+                    status[0] = ProcessLargeJson(opjson);
+
+                    if (!status[0]){
+                        Log.d("results not found","open seacrch");
+                        URL openCustomSearchUrl = NetworkUtil.buildUrlopensearch(strlets[i]);
+                        Log.d("Improved Url",openCustomSearchUrl.toString());
+
+                        String opjson2 = new CustomQueryTask().execute(openCustomSearchUrl).get();
+                        ProcessLargeJson(opjson2);
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
             }
+
+            if (Lintitl.isEmpty()){
+                showToast();
+            }
+            else {
+                for (Map.Entry<String[], Integer> entry : Lintitl.entrySet()) {
+
+
+                    if (entry.getValue() >= 1) {
+                        String[] inf = entry.getKey();
+                        resultinfo info = new resultinfo(inf[0], inf[1]);
+                        resultAdapter.add(info);
+
+                    }
+
+                }
+
+            }
+
+
 
         }
 
@@ -202,7 +240,7 @@ public class resultpage extends AppCompatActivity {
                         URL openCustomSearchUrl = NetworkUtil.buildUrlopensearch(str);
                         Log.d("Improved Url",openCustomSearchUrl.toString());
 
-                        String outputJson1 = new CustomQueryTask().execute(CustomSearchUrl).get();
+                        String outputJson1 = new CustomQueryTask().execute(openCustomSearchUrl).get();
 
                         status[1] = ProcessJson(outputJson1);
                         Log.d("opensearch Status", String.valueOf(status[1]));
@@ -395,7 +433,10 @@ public class resultpage extends AppCompatActivity {
 //
 //    }
 
-    private void ProcessLargeJson(String opJson_string) {
+    private boolean ProcessLargeJson(String opJson_string) {
+
+        boolean resultfound = true;
+
         try {
             jsonObject = new JSONObject(opJson_string);
             jsonArray = new JSONObject(opJson_string).getJSONArray("items");
@@ -427,10 +468,11 @@ public class resultpage extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
 
+            resultfound = false;
 
         }
 
-
+        return resultfound;
 
     }
 
