@@ -8,11 +8,21 @@
 
 
     <ListView
-        android:background="#FFFFFF"
+        android:background="#0D47A1"
         android:id="@+id/DispResults"
+        android:divider="#FFFFFF"
+        android:dividerHeight="2px"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
     </ListView>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:id="@+id/progr"/>
+
 
 </FrameLayout>
