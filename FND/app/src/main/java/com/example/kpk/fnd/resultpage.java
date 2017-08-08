@@ -44,7 +44,6 @@ public class resultpage extends AppCompatActivity {
     JSONObject jsonObject;
     JSONArray jsonArray;
     Map<String[],Integer> Lintitl = new HashMap<>();
-    ProgressBar progressBar;
     ResultAdapter resultAdapter;
 
     ListView listView;
@@ -59,7 +58,6 @@ public class resultpage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
 
-        progressBar = (ProgressBar) findViewById(R.id.progr);
 
         resultAdapter = new ResultAdapter(this,R.layout.row_layout);
         listView = (ListView) findViewById(R.id.DispResults);
@@ -163,7 +161,7 @@ public class resultpage extends AppCompatActivity {
                 for (Map.Entry<String[], Integer> entry : Lintitl.entrySet()) {
 
 
-                    if (entry.getValue() > 1) {
+                    if (entry.getValue() >= 1) {
                         String[] inf = entry.getKey();
                         resultinfo info = new resultinfo(inf[0], inf[1]);
                         resultAdapter.add(info);
@@ -306,10 +304,8 @@ public class resultpage extends AppCompatActivity {
     }
 
     class CustomQueryTask extends AsyncTask<URL,Void,String>{
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+
+
 
         //        public AsyncResponse obj = null;
 //
@@ -350,8 +346,6 @@ public class resultpage extends AppCompatActivity {
 
            @Override
            protected void onPostExecute(String res) {
-
-               progressBar.setVisibility(View.INVISIBLE);
 
 
 //               boolean foundresult;

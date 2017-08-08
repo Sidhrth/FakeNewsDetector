@@ -18,7 +18,7 @@
         android:id="@+id/link"
         android:textSize="17sp"
         android:onClick="webdisp"
-        android:textColor="#B2EBF2"
+        android:textColor="#4DD0E1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="http://www.snopes.com/london-underground-sign/"
