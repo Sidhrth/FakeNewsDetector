@@ -37,18 +37,18 @@ import java.util.regex.Pattern;
 
 public class resultpage extends AppCompatActivity {
 
+
+// global declarations
+    String jsonapistring;
     String Json_String;
-
-//    String opJson_String;
-
+//  String opJson_String;
     JSONObject jsonObject;
     JSONArray jsonArray;
     Map<String[],Integer> Lintitl = new HashMap<>();
     ResultAdapter resultAdapter;
-
     ListView listView;
-//    boolean firsttry = true;
-//    boolean secondtry = false;
+//  boolean firsttry = true;
+//  boolean secondtry = false;
     boolean isUrl=false;
     boolean isLarge = false;
     String[] strlets;
@@ -59,12 +59,43 @@ public class resultpage extends AppCompatActivity {
         setContentView(R.layout.activity_resultpage);
 
 
+        // Display declarations NOT FUNCTIONAL
+        /*
         resultAdapter = new ResultAdapter(this,R.layout.row_layout);
         listView = (ListView) findViewById(R.id.DispResults);
         listView.setAdapter(resultAdapter);
+        */
+
+
+        //gets input from previous activity
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGAE");
 
+        //FOR TESTING API, Builds the URL
+        JSONObject jsondata = new JSONObject();
+        try {
+            jsondata.put("input data from app", str);
+            jsondata.put("google url","https://www.google.co.in/");
+            jsonapistring = jsondata.toString();
+
+            //log to show jsonstring
+            Log.d("json string formed",jsonapistring);
+
+            URL url = NetworkUtil.urlbuilding(jsonapistring);
+
+            new PostAPItask().execute(url);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        //////NOT FUNCTIONAL
+        // TO check whether input is an URL and if true executes function
+
+        /*
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
         Pattern p = Pattern.compile(URL_REGEX);
@@ -120,9 +151,12 @@ public class resultpage extends AppCompatActivity {
             Log.d("URL test","It is NOT a URL");
         }
 
+       */
 
 
+        // to check if input is very large and if true Splits them into sentences and stores them into an array
 
+/*
         if(str.length() > 40 && !isUrl){
             final boolean[] status = new boolean[2];
            isLarge = true;
@@ -175,11 +209,10 @@ public class resultpage extends AppCompatActivity {
 
 
         }
+*/
 
 
-
-
-
+//       OLD CODE not required
 //
 //        if (flag ==3) {
 //
@@ -195,6 +228,12 @@ public class resultpage extends AppCompatActivity {
 //        }
 
 
+
+
+
+
+        // Normal execution of normal input conditions  ex. simple text(one sentence)
+        /*
 
             if (!isLarge && !isUrl) {
 
@@ -262,9 +301,31 @@ public class resultpage extends AppCompatActivity {
             }
 
 
-
+            */
     }
 
+    //Makes URL connection. posts data
+    class PostAPItask extends AsyncTask<URL,Void,Void>
+    {
+
+        @Override
+        protected Void doInBackground(URL... params) {
+            HttpURLConnection httpURLConnection = null;
+            try {
+                httpURLConnection = (HttpURLConnection) params[0].openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+    }
+
+
+
+    //////NOT FUNCTIONAL
     public void webdisp(View view) {
 
         TextView lnk = (TextView) findViewById(R.id.link);
@@ -276,6 +337,7 @@ public class resultpage extends AppCompatActivity {
 
     }
 
+    //////NOT FUNCTIONAL
     class LinkTest extends AsyncTask<String,Void,String>{
 
         String Title;
@@ -302,7 +364,7 @@ public class resultpage extends AppCompatActivity {
 
         }
     }
-
+    //////NOT FUNCTIONAL
     class CustomQueryTask extends AsyncTask<URL,Void,String>{
 
 
@@ -313,6 +375,8 @@ public class resultpage extends AppCompatActivity {
 //            obj = asyncResponse;
 //        }
 
+
+        //////NOT FUNCTIONAL
            @Override
            protected String doInBackground(URL... urls) {
 
@@ -344,6 +408,8 @@ public class resultpage extends AppCompatActivity {
                 return null;
            }
 
+
+        //////NOT FUNCTIONAL
            @Override
            protected void onPostExecute(String res) {
 
@@ -438,6 +504,7 @@ public class resultpage extends AppCompatActivity {
 //
 //    }
 
+    //////NOT FUNCTIONAL
     private boolean ProcessLargeJson(String opJson_string) {
 
         boolean resultfound = true;
@@ -486,6 +553,7 @@ public class resultpage extends AppCompatActivity {
         Toast.makeText(this,"Results not found",Toast.LENGTH_LONG).show();
     }
 
+    //////NOT FUNCTIONAL
     public boolean ProcessJson(String opJson_String) {
 
         boolean resultfound = true;

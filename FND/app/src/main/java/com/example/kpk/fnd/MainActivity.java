@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void check (View view){
-        Toast.makeText(this,"Loading",Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,"Loading",Toast.LENGTH_LONG).show();
         EditText text = (EditText) findViewById(R.id.editText);
         String link = text.getText().toString();
         Intent i = new Intent(this,resultpage.class);

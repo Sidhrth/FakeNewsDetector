@@ -17,6 +17,25 @@ import java.util.Scanner;
 
 class NetworkUtil {
 
+    //URL builder
+    public static URL urlbuilding (String inputdata)
+    {
+        //insert URL and argument (inputdata)
+
+        String url1 = "";
+        URL url = null;
+        // add URL/IP Address
+
+        try {
+            url = new URL(url1);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+
+    //////NOT FUNCTIONAL
     public static URL buildUrl(String CustomSearchQuery) {
         // looking for
         String strNoSpaces = CustomSearchQuery.replace(" ", "+");
@@ -41,6 +60,7 @@ class NetworkUtil {
         return url;
     }
 
+    //////NOT FUNCTIONAL
     public static URL buildUrlopensearch(String CustomSearchQuery) {
         // looking for
         String strNoSpaces = CustomSearchQuery.replace(" ", "+");
