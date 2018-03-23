@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class ResultAdapter extends ArrayAdapter {
             LayoutInflater layoutInflater =(LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = layoutInflater.inflate(R.layout.row_layout,parent,false);
             resultHolder = new ResultHolder();
+            resultHolder.image = (ImageView) row.findViewById(R.id.img);
             resultHolder.title = (TextView) row.findViewById(R.id.title);
             resultHolder.Link = (TextView) row.findViewById(R.id.link);
             row.setTag(resultHolder);
@@ -63,6 +65,7 @@ public class ResultAdapter extends ArrayAdapter {
         }
 
         resultinfo resinfo = (resultinfo)this.getItem(position);
+        resultHolder.image.setImageURI(resinfo.getUri());
         resultHolder.title.setText(resinfo.getTitle());
         resultHolder.Link.setText(resinfo.getLink());
         return row;
@@ -70,6 +73,7 @@ public class ResultAdapter extends ArrayAdapter {
 
     static class ResultHolder{
 
+        ImageView image;
         TextView title,Link;
     }
 

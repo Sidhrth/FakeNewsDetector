@@ -3,6 +3,9 @@
     package="com.example.kpk.fnd">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -22,13 +25,15 @@
             <intent-filter>
 
                 <action android:name="android.intent.action.SEND" />
-
+                <action android:name="android.intent.action.SEND_MULTIPLE"/>
                 <category android:name="android.intent.category.DEFAULT" />
 
+                <data android:mimeType="image/*" />
                 <data android:mimeType="text/plain" />
 
 
             </intent-filter>
+
         </activity>
         <activity android:name=".resultpage">
             <intent-filter>

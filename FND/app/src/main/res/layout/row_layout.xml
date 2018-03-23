@@ -3,28 +3,38 @@
     android:layout_width="match_parent" android:layout_height="100dp"
     android:padding="10dp">
 
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/link"
+        android:layout_toStartOf="@+id/link" />
+
     <TextView
         android:id="@+id/title"
-        android:textSize="15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:text="FACT CHECK: Is This a Real London Underground Sign?"
-        android:layout_below="@+id/link"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="76dp"
+        android:layout_marginStart="76dp"
+        android:text="FACT CHECK: Is This a Real London Underground Sign?"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/link"
-        android:textSize="17sp"
-        android:onClick="webdisp"
-        android:textColor="#4DD0E1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="http://www.snopes.com/london-underground-sign/"
+        android:layout_alignLeft="@+id/title"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/title"
+        android:onClick="webdisp"
+        android:text="http://www.snopes.com/london-underground-sign/"
+        android:textColor="#4DD0E1"
+        android:textSize="17sp" />
 
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.kpk.fnd;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -70,18 +71,20 @@ public class resultpage extends AppCompatActivity {
         //gets input from previous activity
         Intent intent = getIntent();
         String str = intent.getStringExtra("EXTRA_MESSAGAE");
+        Bitmap bitmap = (Bitmap) intent.getParcelableExtra("BitmapImage");
 
         //FOR TESTING API, Builds the URL
         JSONObject jsondata = new JSONObject();
         try {
-            jsondata.put("input data from app", str);
-            jsondata.put("google url","https://www.google.co.in/");
+            jsondata.put("Text box", str);
+            jsondata.put("URL","https://www.google.co.in/");
+            jsondata.put("Image",bitmap);
             jsonapistring = jsondata.toString();
 
             //log to show jsonstring
             Log.d("json string formed",jsonapistring);
 
-            URL url = NetworkUtil.urlbuilding(jsonapistring);
+            URL url = NetworkUtil.urlbuilding(jsondata);
 
             new PostAPItask().execute(url);
 
@@ -314,6 +317,11 @@ public class resultpage extends AppCompatActivity {
             try {
                 httpURLConnection = (HttpURLConnection) params[0].openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
+
+                // handle incoming data
+                // use resultinfo class to handle information display
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

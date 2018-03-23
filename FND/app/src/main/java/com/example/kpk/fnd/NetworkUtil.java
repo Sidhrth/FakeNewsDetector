@@ -2,6 +2,8 @@ package com.example.kpk.fnd;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +13,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- * Created by KPK on 21-06-2017.
- */
 
 class NetworkUtil {
 
-    //URL builder
-    public static URL urlbuilding (String inputdata)
+    //URL builder ARGUMENT IS JSONOBJECT
+    public static URL urlbuilding (JSONObject inputdata)
     {
         //insert URL and argument (inputdata)
 
